@@ -1,11 +1,21 @@
 <script setup>
 import { defineEmits, reactive } from 'vue';
-import Todobutton from './Todobutton.vue'
+import moment from 'moment-jalaali'
+
+
+const getTodayDate = () => {
+  return moment().format('jYYYY/jM/jD')
+}
+
+
 
 const emit = defineEmits(['create-todo'])
 
 const todoState = reactive({
-    todo:"",
+    name:"",
+    card: 0,
+    day:4,
+    date:getTodayDate(),
     invalid: null,
     errMsg:''
 }) 
@@ -14,10 +24,10 @@ const createTodo = () => {
 
     todoState.invalid =null;
 
-    if (todoState.todo !== ""){
+    if (todoState.name !== ""){
 
-        emit('create-todo' , todoState.todo);
-        todoState.todo = "";
+        emit('create-todo' , todoState.name , todoState.card , todoState.day , todoState.date);
+        todoState.name = "";
         return
     }
     todoState.invalid = true;
@@ -28,8 +38,12 @@ const createTodo = () => {
 
 <template>
     <div class="input-wrap" :class="{ 'input-err' : todoState.invalid }">
-        <input type="text" v-model="todoState.todo">
-        <Todobutton @click="createTodo()" />
+
+        <button @click="createTodo()">افزودن</button>
+        <input name="name" type="text" v-model="todoState.name" placeholder="نام">
+        <input name="name" type="number" v-model="todoState.card">
+        <input name="name" type="number" v-model="todoState.day">
+
     </div>
     <p v-show="todoState.invalid" class="err-msg">{{ todoState.errMsg }}</p>
 
@@ -38,27 +52,31 @@ const createTodo = () => {
 <style lang="scss" scoped>
 .input-wrap {
   display: flex;
-  transition: 250ms ease;
-  border: 2px solid #41b080;
+  justify-content: center;
+  gap:5px;
+  direction:rtl;
 
-  &.input-err {
-    border-color: red;
-  }
-
-  &:focus-within {
-    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1),
-      0 -2px 4px -2px rgb(0 0 0 / 0.1);
-  }
-
-  input {
-    width: 100%;
+  input[type="text"] {
+    width: 60%;
     padding: 8px 6px;
+    border: 1px solid black;
+    border-radius: 3px;
     border: none;
-
-    &:focus {
-      outline: none;
-    }
   }
+  input[type="number"] {
+    width: 10%;
+    padding: 8px 6px;
+    border: 1px solid black;
+    border-radius: 3px;
+    border: none;
+  }
+
+
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 3px;
+}
 }
 
 .err-msg {

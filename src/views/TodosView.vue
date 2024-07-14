@@ -36,29 +36,29 @@ const STLLS = () => {
   localStorage.setItem("todoList" , JSON.stringify(todoList.value))
 }
 
-const createTodos = (todo) => {
+const createTodos = (name , card , day , date) => {
   todoList.value.push({
     id: uid(),
-    todo,
+    name,
+    card,
+    day,
+    date,
+    gift: card / 3 * 5 , 
     isCompleted: null,
     isEditing: null
   })
-  STLLS();
 };
 
 const toggleTodoComplete = (todoPos) => {
   todoList.value[todoPos].isCompleted = !todoList.value[todoPos].isCompleted;
-  STLLS();
 }
 
 const toggleTodoEdit = (todoPos) => {
   todoList.value[todoPos].isEditing = !todoList.value[todoPos].isEditing;
-  STLLS();
 }
 
 const deleteTodo = (todoId) => {
   todoList.value = todoList.value.filter((todo) => todo.id !== todoId);
-  STLLS();
 }
 
 </script>
@@ -66,11 +66,12 @@ const deleteTodo = (todoId) => {
 <template>
   <main>
     <h1>
-      Create Todos
+      افزودن دانشجو
     </h1>
     <TodoCreator @create-todo="createTodos" />
+
     <ul class="todo-list" v-if="todoList.length > 0">
-      <Todoitem  v-for="(todo , index) in todoList" :todo="todo" :index="index" @toggle-complete="toggleTodoComplete" @toggle-edit="toggleTodoEdit" @toggle-complete-todo="toggleTodoEdit" @delete-todo="deleteTodo" />
+      <Todoitem  :todoList="todoList" @toggle-complete="toggleTodoComplete" @toggle-edit="toggleTodoEdit" @toggle-complete-todo="toggleTodoEdit" @toggle-delete="deleteTodo" />
     </ul>
     <p class="todos-msg" v-else >
       <Icon icon="noto-v1:sad-but-relieved-face"/> 
@@ -94,7 +95,7 @@ main {
   padding: 40px 16px;
 
   h1 {
-    margin-bottom: 16px;
+    margin-bottom: 30px;
     text-align: center;
   }
 

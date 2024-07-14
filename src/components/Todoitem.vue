@@ -2,37 +2,97 @@
 import { Icon } from '@iconify/vue'
 
 const props = defineProps({
-    todo: {
-        type: Object,
-        required: true,
-    },
-    index: {
-        type: Number,
-        required: true,
-    }
+  todoList: {
+      required: true,
+  }
 })
-defineEmits(["toggle-complete" , "toggle-edit" , "toggle-complete-todo" , "delete-todo"])
+defineEmits(["toggle-complete" , "toggle-edit" , "toggle-complete-todo" , "toggle-delete"])
 </script>
 
 <template>
+  <div dir="rtl" class="main">
 
-    <li>
-        <input type="checkbox" :checked="todo.isCompleted" @input="$emit('toggle-complete' , index)">
-        <div class="todo">
-            <input v-if="todo.isEditing" type="text" v-model="todo.todo">
-            <span v-else :class="{'completed-todo' : todo.isCompleted}">{{ todo.todo }}</span>
-        </div>
-        <div class="todo-actions">
-            <Icon v-if="todo.isEditing" @click="$emit('toggle-complete-todo' , index)" icon="ph:check-circle" color="#41b080" width="22"/>
-            <Icon v-else @click="$emit('toggle-edit' , index)" icon="ph:pencil-fill" color="#41b080" width="22" />
-            <Icon icon="ph:trash" color="#f95e5e" width="22" @click="$emit('delete-todo' , todo.id)" />
-        </div>
-    </li>
+    <table>
+      <thead>
+        <tr>
+          <th>ردیف</th>
+          <th>وضعیت</th>
+          <th>نام</th>
+          <th>کارت</th>
+          <th>امتیاز</th>
+          <th>روز</th>
+          <th>تاریخ</th>
+          <th>عملگر</th>
+        </tr>
+      </thead>
+      <tbody v-for="(user , index) in todoList">
+        <tr>
+              <td>
+                <p>{{ index + 1 }}</p>
+              </td>
+              <td>
+                <input type="checkbox" :checked="user.isCompleted" @input="$emit('toggle-complete' , index)">
+              </td>
+
+              <td v-show="user.isEditing">
+                <input class="textedit" type="text" v-model="user.name">
+              </td>
+              <td v-show="user.isEditing">
+                <input class="numedit" type="number" v-model="user.card">
+              </td>
+              <td v-show="user.isEditing">
+                <input class="numedit" type="number" v-model="user.card">
+              </td>
+              <td v-show="user.isEditing">
+                <input class="numedit" type="number" v-model="user.day">
+              </td>
+              <td v-show="user.isEditing">
+                <input type="text" v-model="user.date">
+              </td>
+
+                
+              <td v-show="! user.isEditing">
+                <span class="show" :class="{'completed-todo' : user.isCompleted}">{{ user.name }}</span>
+              </td>
+              <td v-show="! user.isEditing">
+                <span class="show" :class="{'completed-todo' : user.isCompleted}">{{ user.card }}</span>
+              </td>
+              <td v-show="! user.isEditing">
+                <span class="show" :class="{'completed-todo' : user.isCompleted}">{{ user.gift }}</span>
+              </td>
+              <td v-show="! user.isEditing">
+                <span class="show" :class="{'completed-todo' : user.isCompleted}">{{ user.day }}</span>
+              </td>              
+              <td v-show="! user.isEditing">
+                <span class="show" :class="{'completed-todo' : user.isCompleted}">{{ user.date }}</span>
+              </td>
+
+
+
+            <td class="todo-actions">
+              <Icon class="icon" v-if="user.isEditing" @click="$emit('toggle-complete-todo' , index)" icon="ph:check-circle" color="#41b080" width="22"/>
+              <Icon class="icon" v-else @click="$emit('toggle-edit' , index)" icon="ph:pencil-fill" color="#41b080" width="22" />
+              <Icon class="icon" icon="ph:trash" color="#f95e5e" width="22" @click="$emit('toggle-delete' , user.id)" />
+            </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
 
 </template>
 
 
 <style lang="scss" scoped>
+
+@font-face {
+  font-family: 'BTitrBold';
+  src: url('../assets/fonts/B\ Titr\ Bold_0.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 li {
   display: flex;
   align-items: center;
@@ -73,6 +133,9 @@ li {
       padding: 2px 6px;
       border: 2px solid #41b080;
     }
+    .show{
+      margin-right: 20px;
+    }
   }
 
   .todo-actions {
@@ -85,4 +148,40 @@ li {
     }
   }
 }
+input{
+text-align: center
+}
+.numedit{
+  width:40px;
+}
+table {
+  width: 750px; /* عرض جدول */
+}
+
+th, td {
+  border-radius: 5px;
+  padding: 10px; /* پدینگ داخلی برای هر سلول */
+  text-align: center; /* مرکز چین متن */
+  border: 1px solid #ccc; /* حاشیه‌های سلول‌ها */
+}
+th {
+  background-color: #f2f2f2; /* پس زمینه هدر */
+}
+.main{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  font-family: 'BTitrBold';
+}
+th:nth-child(5), td:nth-child(5), 
+th:nth-child(2), td:nth-child(2),
+th:nth-child(4), td:nth-child(4),
+th:nth-child(1), td:nth-child(1)
+{
+  width:10px;
+}
+
+
+
+
 </style>
